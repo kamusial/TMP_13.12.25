@@ -26,11 +26,19 @@ plt.scatter(df1.powierzchnia, df1.cena)
 plt.show()
 
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
 del df1['liczba_pokoi']
 X = df1.iloc[:, 2:]
 # X = df1.loc[:,['liczba_pieter', 'pietro', 'powierzchnia', 'rok_budowy']]
 y = df1.cena
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
 model = LinearRegression()
-model.fit(X, y)
+model.fit(X_train, y_train)
 print(f'Wspolczynnik kierunkowy: {model.coef_}')
 print( pd.DataFrame  (model.coef_, df1.iloc[:, 2:].columns))
+print(f'wyraz wolny: {model.intercept_}')
+print(f'Wynik R^2 na zbiorze testowym {model.score(X_test, y_test):.4f}')
+
