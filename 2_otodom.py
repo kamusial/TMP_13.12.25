@@ -46,7 +46,7 @@ print(f'Ceny przykładowych mieszkań to: {model.predict([[4, 2, 80, 2024], [2, 
 # ===========================
 # DODATKOWE STATYSTYKI
 # ===========================
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, root_mean_squared_error
 
 # Predykcja na zbiorze testowym
 y_pred = model.predict(X_test)
@@ -55,10 +55,36 @@ y_pred = model.predict(X_test)
 r2_test = r2_score(y_test, y_pred)
 mae = mean_absolute_error(y_test, y_pred)
 mse = mean_squared_error(y_test, y_pred)
-rmse = mean_squared_error(y_test, y_pred, squared=False)
+# rmse = mean_squared_error(y_test, y_pred, squared=False)     # nie działa ze starym sklearn
+# rmse = root_mean_squared_error(y_test, y_pred)
+rmse = mse ** 0.5
 
 print("\n=== Statystyki jakości modelu ===")
 print(f'R^2 (test)      : {r2_test:.4f}')
-print(f'MAE (Mean Abs. Error): {mae:.2f}')
-print(f'MSE (Mean Sq. Error) : {mse:.2f}')
-print(f'MSE (Mean Sq. Error) : {mse:.2f}')
+print(f'MAE (Mean Abs. Error): {mae:.2f} - czyli o ile model się myli')
+print(f'MSE (Mean Sq. Error) : {mse:.2f} - czyli o ile model się myli priorytetyzując duże błędy [zł^2]')
+print(f'RMSE : {rmse:.2f}')
+
+# 2. Informacje o danych użytych w modelu
+print("\n=== Statystyki dotyczące danych ===")
+print(f"Liczba obserwacji przed odfiltrowaniem skrajnych cen   : {df.shape[0]}")
+print(f"Liczba obserwacji po odfiltrowaniu (q1–q3)             : {df1.shape[0]}")
+print(f"Liczba obserwacji w zbiorze treningowym                : {X_train.shape[0]}")
+print(f"Liczba obserwacji w zbiorze testowym                   : {X_test.shape[0]}")
+print(f"Średnia cena w df1 (po odfiltrowaniu skrajnych wartości): {df1.cena.mean():.2f}")
+print(f"Mediana ceny w df1                                     : {df1.cena.median():.2f}")
+
+# 3, Analiza reszt (różnica cena_rzeczywista - cena_modelu)
+residuals = y_test - y_pred
+print("\n=== Staytsyki reszt (błędy prognzy) ===")
+print(f'Średnia reszt            : {residuals.mean():.2f}')    # najlepiej bliska 0
+print(f'Odchylenie std rest      : {residuals.std():.2f}')     # typowa wielkość błędu
+print(f'Minimalna reszta         : {residuals.min():.2f}')   # największe niedoszacowanie
+print(f'Maksymalna reszta        : {residuals.max():.2f}')  # największe przeszacowane
+
+# 4. WYkres histogramu reszt
+sns.histplot(residuals, kde=True)
+plt.title('Rozkład resz modelu (y_test - y_pred)')
+plt.xlabel('Reszta [zl]')
+plt.ylabel('Liczb obserwacji')
+plt.show()
