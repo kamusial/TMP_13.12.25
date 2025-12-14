@@ -57,3 +57,7 @@ ct = pd.crosstab(df['category'], df['failure'])
 print(ct)
 chi2, p_chi2, dof, expecter = stats.chi2_contingency(ct)
 print(f'\nChi2= {chi2:.3f}, df = {dof}, p-value = {p_chi2:.4f}')
+
+print('\nRegresja liniowa y ~ x + group')
+model= smf.ols('y ~ x + C(group)',data=df).fit()
+print(model.summary())
