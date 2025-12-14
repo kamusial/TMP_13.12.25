@@ -30,3 +30,30 @@ df = pd.DataFrame({
     'failure': failure
 })
 print(df.head())
+
+###=========== Podstawowe miary ===========###
+
+print('\n\nPodstawowe statystyki opisowe')
+print(df[['x','y']].describe())
+
+print('\nSkośność i kurtoza')
+print(f'Skośność x: {stats.skew(df['x'])}')
+print(f'Kutoza x: {stats.kurtosis(df['x'], fisher=True)}')
+
+print('\nStatystyki pisowe w grup')
+print(df.groupby('group')[['x','y']].agg(['mean', 'std', 'median']))
+
+print('\nKorelacja')
+corr, p_corr = stats.pearsonr(df['x'], df['y'])
+print(f'Korelacja r = {corr:.3f}, p-value = {p_corr:.4f}')    # korelacja i czy wynik jest statystycznie istotny
+
+### Statystyka inferencyjna ###
+print('\nTest normalności Shapiro-Wilka dla x')
+w_stat, p_shapiro = stats.shapiro(df['x'])
+print(f'W = {w_stat:.3f}, p-value = {p_shapiro:.4f}')
+
+print('\nTest chi-kwadrat niezależności category vs failure')
+ct = pd.crosstab(df['category'], df['failure'])
+print(ct)
+chi2, p_chi2, dof, expecter = stats.chi2_contingency(ct)
+print(f'\nChi2= {chi2:.3f}, df = {dof}, p-value = {p_chi2:.4f}')
