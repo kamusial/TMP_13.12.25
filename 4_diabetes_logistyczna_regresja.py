@@ -55,3 +55,29 @@ model = LogisticRegression()
 model.fit(X_train, y_train)
 print(model.score(X_test, y_test))
 print(pd.DataFrame(confusion_matrix(y_test, model.predict(X_test))))
+
+from sklearn.metrics import (
+    confusion_matrix,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+    classification_report
+)
+
+y_pred = model.predict(X_test)
+# Dodatkowe miary
+acc = accuracy_score(y_test, y_pred)
+prec = precision_score(y_test, y_pred)
+rec = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+print('\nMiary jakości – dane oryginalne:')
+print(f'Accuracy : {acc:.4f}')
+print(f'Precision: {prec:.4f}')
+print(f'Recall   : {rec:.4f}')
+print(f'F1-score : {f1:.4f}')
+
+print('\nRaport klasyfikacji:')
+print(classification_report(y_test, y_pred, target_names=['zdrowy', 'chory']))
