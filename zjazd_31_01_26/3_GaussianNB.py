@@ -39,6 +39,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) #, rand
 
 # https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html
 model = GaussianNB()
+# GaussianNB(priors=[0.33, 0.33, 0.34])
+# GaussianNB(var_smoothing=1e-9)   Im większe: większe wygładzenie → mniejsze przeuczenie
 model.fit(X_train, y_train)
 print(model.score(X_test, y_test))
 print(pd.DataFrame(confusion_matrix(y_test, model.predict(X_test))))
