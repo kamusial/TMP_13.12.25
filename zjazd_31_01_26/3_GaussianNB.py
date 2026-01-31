@@ -5,6 +5,7 @@ import seaborn as sns
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
+from sklearn.naive_bayes import GaussianNB
 
 df = pd.read_csv('dane\\iris.csv')
 print(f'Describe: {df.describe()}')
@@ -31,22 +32,13 @@ sample = [5.6, 3.2, 5.2, 1.45]
 # plt.scatter(5.2, 1.45, c='r')
 # plt.show()
 
-print('Klasyfikator Decision Tree Clasifier')
-X = df.iloc[  :  ,  :4 ]   # 4 pierwsze kolumny - nie można wziąć do rysowania granic decyzyjnych
-# X = df.iloc[  :  ,  :2 ]
+print('Klasyfikator GaussianNB')
+X = df.iloc[  :  ,  :4 ]   # 4 pierwsze kolumny
 y = df.class_value
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) #, random_state=0)
 
-from sklearn.tree import DecisionTreeClassifier
-# https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
-model = DecisionTreeClassifier(max_depth=5)
+# https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html
+model = GaussianNB()
 model.fit(X_train, y_train)
 print(model.score(X_test, y_test))
 print(pd.DataFrame(confusion_matrix(y_test, model.predict(X_test))))
-print(pd.DataFrame(model.feature_importances_, X.columns))
-
-# granice decyzyjne
-# from mlxtend.plotting import plot_decision_regions
-# plot_decision_regions(X.values, y.values, model)
-# plt.show()
-
