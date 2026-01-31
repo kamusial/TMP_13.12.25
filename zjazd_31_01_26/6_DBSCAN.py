@@ -25,7 +25,7 @@ plt.ylabel(f'{min_samples}-ta najbliższa odległość')
 plt.grid(True, alpha=0.3)
 plt.show()
 
-eps = 0.3
+eps = 0.35
 dbscan = DBSCAN(eps=eps, min_samples=min_samples)
 etykiety = dbscan.fit_predict(X)
 
