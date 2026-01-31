@@ -23,31 +23,23 @@ sample = [5.6, 3.2, 5.2, 1.45]
 # plt.scatter(df.sepallength, df.sepalwidth)
 # plt.show()
 
-plt.scatter(5.6, 3.2, c='r')  # czerwona kropka
-sns.scatterplot(data=df, x='sepallength', y='sepalwidth', hue='class')
-plt.show()
+# plt.scatter(5.6, 3.2, c='r')  # czerwona kropka
+# sns.scatterplot(data=df, x='sepallength', y='sepalwidth', hue='class')
+# plt.show()
+#
+# sns.scatterplot(data=df, x='petallength', y='petalwidth', hue='class')
+# plt.scatter(5.2, 1.45, c='r')
+# plt.show()
 
-sns.scatterplot(data=df, x='petallength', y='petalwidth', hue='class')
-plt.scatter(5.2, 1.45, c='r')
-plt.show()
-
-print('Klasyfikator KNN')
+print('Klasyfikator Decision Tree Clasifier')
 X = df.iloc[  :  ,  :4 ]   # 4 pierwsze kolumny
 y = df.class_value
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) #, random_state=0)
 
-# https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
-model = KNeighborsClassifier(5)
+from sklearn.tree import DecisionTreeClassifier
+# https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
+model = DecisionTreeClassifier()
 model.fit(X_train, y_train)
 print(model.score(X_test, y_test))
 print(pd.DataFrame(confusion_matrix(y_test, model.predict(X_test))))
 
-# jak liczba sąsiadow wpływa na jakosc rozwiązania
-results = []
-for k in range(100):
-    model = KNeighborsClassifier(k+1, weights='distance')
-    model.fit(X_train, y_train)
-    results.append(model.score(X_test, y_test))
-
-plt.plot(range(1, 101),results)
-plt.show()
